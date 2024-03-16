@@ -7,8 +7,9 @@ def main():
     child = HTMLNode("thead", "header")
     child.add_props({ "scope": "col" })
     htmlnode.add_child(child)
-    htmlnode.add_props({ "class": "table"})
+    htmlnode.add_props({ "class": "table", "id": "tester"})
     print(textnode)
     print(htmlnode)
+    print(htmlnode.props_to_html())
 
 main()
