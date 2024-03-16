@@ -13,5 +13,14 @@ class TestHTMLNode(unittest.TestCase):
         expected_string += f"\n->-> tag=thead | props={{'scope': 'col'}} | value=Header | children="
         self.assertEqual(str(node), expected_string)
 
+    def test_props_to_html(self):
+        node = HTMLNode("table")
+        node.add_props({ "class": "table", "id": "test_table" })
+        self.assertEqual(node.props_to_html(), " class=\"table\" id=\"test_table\"")
+
+    def test_props_to_html_guard(self):
+        node = HTMLNode("table")
+        self.assertIsNone(node.props_to_html())
+
 if __name__ == "__main__":
     unittest.main()
