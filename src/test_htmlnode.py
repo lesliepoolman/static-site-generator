@@ -14,9 +14,13 @@ class TestHTMLNode(unittest.TestCase):
         node = HTMLNode("table", None, None, { "class": "table", "id": "test_table" })
         self.assertEqual(node.props_to_html(), " class=\"table\" id=\"test_table\"")
 
+    def test_props_to_html_without_props(self):
+        node = HTMLNode("table", None, None, None)
+        self.assertEqual(node.props_to_html(), "")
+
     def test_props_to_html_guard(self):
         node = HTMLNode("table")
-        self.assertIsNone(node.props_to_html())
+        self.assertEqual(node.props_to_html(), "")
 
 if __name__ == "__main__":
     unittest.main()

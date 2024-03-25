@@ -14,7 +14,7 @@ class TestTextNode(unittest.TestCase):
 
     def test_props_to_html_guard(self):
         node = LeafNode("p")
-        self.assertIsNone(node.props_to_html())
+        self.assertEqual(node.props_to_html(), "")
 
     def test_to_html(self):
         node = LeafNode("p", "Paragraph", { "class": "p", "id": "test_p" })
