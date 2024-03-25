@@ -1,6 +1,10 @@
 import unittest
 
-from textnode import TextNode
+from leafnode import LeafNode
+from textnode import (
+        TextNode,
+        text_type_to_tag
+    )
 
 class TestTextNode(unittest.TestCase):
     def test_eq(self):
@@ -26,6 +30,27 @@ class TestTextNode(unittest.TestCase):
     def test_repr(self):
         node = TextNode("This is a text node", "text", "https://www.sample.com")
         self.assertEqual("TextNode(This is a text node, text, https://www.sample.com)", repr(node))
+
+    def test_text_node_to_html_node(self):
+        for key in text_type_to_tag.keys():
+            if key == "a":
+                node = TextNode("Link", key, "https://www.sample.com")
+                leaf = LeafNode(text_type_to_tag[key], "Link", { "href": node.url })
+            elif key == "image":
+                node = TextNode("Image", key, "https://www.source.com")
+                leaf = LeafNode(text_type_to_tag[key], "", { "src": node.url, "alt": node.text })
+            else:
+                node = TextNode("Texty Node", key)
+                leaf = LeafNode(text_type_to_tag[key], node.text)
+            self.assertEqual(node.text_node_to_html_node().to_html(), leaf.to_html())
+
+    def test_text_node_to_html_node_exception(self):
+        node = TextNode("Texty Node", "table")
+        with self.assertRaises(Exception) as ve:
+            node.text_node_to_html_node()
+            ve_error = ve.exception
+            self.assertEqual(ve_error.error_code, "Invalid text type: table")
+
 
 
 if __name__ == "__main__":
