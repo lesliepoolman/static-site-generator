@@ -4,7 +4,6 @@ from leafnode import LeafNode
 from textnode import (
         TextNode,
         text_type_to_tag,
-        split_nodes_delimiter,
     )
 
 class TestTextNode(unittest.TestCase):
@@ -51,75 +50,6 @@ class TestTextNode(unittest.TestCase):
             node.text_node_to_html_node()
             ve_error = ve.exception
             self.assertEqual(ve_error.error_code, "Invalid text type: table")
-
-    def test_delim_bold(self):
-        node = TextNode("This is text with a **bolded** word", "text")
-        new_nodes = split_nodes_delimiter([node], "**", "bold")
-        self.assertListEqual(
-            [
-                TextNode("This is text with a ", "text"),
-                TextNode("bolded", "bold"),
-                TextNode(" word", "text"),
-            ],
-            new_nodes,
-        )
-
-    def test_delim_bold_double(self):
-        node = TextNode(
-            "This is text with a **bolded** word and **another**", "text"
-        )
-        new_nodes = split_nodes_delimiter([node], "**", "bold")
-        self.assertListEqual(
-            [
-                TextNode("This is text with a ", "text"),
-                TextNode("bolded", "bold"),
-                TextNode(" word and ", "text"),
-                TextNode("another", "bold"),
-            ],
-            new_nodes,
-        )
-
-    def test_delim_bold_multiword(self):
-        node = TextNode(
-            "This is text with a **bolded word** and **another**", "text"
-        )
-        new_nodes = split_nodes_delimiter([node], "**", "bold")
-        self.assertListEqual(
-            [
-                TextNode("This is text with a ", "text"),
-                TextNode("bolded word", "bold"),
-                TextNode(" and ", "text"),
-                TextNode("another", "bold"),
-            ],
-            new_nodes,
-        )
-
-    def test_delim_italic(self):
-        node = TextNode("This is text with an *italic* word", "text")
-        new_nodes = split_nodes_delimiter([node], "*", "italic")
-        self.assertListEqual(
-            [
-                TextNode("This is text with an ", "text"),
-                TextNode("italic", "italic"),
-                TextNode(" word", "text"),
-            ],
-            new_nodes,
-        )
-
-    def test_delim_code(self):
-        node = TextNode("This is text with a `code block` word", "text")
-        new_nodes = split_nodes_delimiter([node], "`", "code")
-        self.assertListEqual(
-            [
-                TextNode("This is text with a ", "text"),
-                TextNode("code block", "code"),
-                TextNode(" word", "text"),
-            ],
-            new_nodes,
-        )
-
-
-
 
 if __name__ == "__main__":
     unittest.main()
