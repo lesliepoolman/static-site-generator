@@ -3,6 +3,8 @@ import unittest
 from textnode import TextNode
 from inline_markdown import (
     split_nodes_delimiter,
+    extract_markdown_images,
+    extract_markdown_links,
 )
 
 class TestInlineMarkdown(unittest.TestCase):
@@ -71,6 +73,16 @@ class TestInlineMarkdown(unittest.TestCase):
             ],
             new_nodes,
         )
+
+    def test_extract_images_using_regex(self):
+        example = extract_markdown_images("This is text with an ![image](https://i.imgur.com/zjjcJKZ.png) and ![another](https://i.imgur.com/dfsdkjfd.png)")
+        exp_res = [("image", "https://i.imgur.com/zjjcJKZ.png"), ("another", "https://i.imgur.com/dfsdkjfd.png")]
+        self.assertEqual(exp_res, example)
+
+    def test_extract_images_using_regex(self):
+        example = extract_markdown_links("This is text with a [link](https://www.example.com) and [another](https://www.example.com/another)")
+        exp_res = [("link", "https://www.example.com"), ("another", "https://www.example.com/another")]
+        self.assertEqual(exp_res, example)
 
 if __name__ == "__main__":
     unittest.main()
