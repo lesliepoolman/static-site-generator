@@ -2,16 +2,17 @@ import unittest
 
 from leafnode import LeafNode
 from textnode import (
-        TextNode,
-        text_type_to_tag,
-    )
+    TextNode,
+    text_type_to_tag,
+)
+
 
 class TestTextNode(unittest.TestCase):
     def test_eq(self):
         node = TextNode("This is a text node", "bold")
         node2 = TextNode("This is a text node", "bold")
         self.assertEqual(node, node2)
-    
+
     def test_not_eq(self):
         node = TextNode("This is node 1", "bold")
         node2 = TextNode("This is node 2", "bold")
@@ -29,16 +30,20 @@ class TestTextNode(unittest.TestCase):
 
     def test_repr(self):
         node = TextNode("This is a text node", "text", "https://www.sample.com")
-        self.assertEqual("TextNode(This is a text node, text, https://www.sample.com)", repr(node))
+        self.assertEqual(
+            "TextNode(This is a text node, text, https://www.sample.com)", repr(node)
+        )
 
     def test_text_node_to_html_node(self):
         for key in text_type_to_tag.keys():
             if key == "a":
                 node = TextNode("Link", key, "https://www.sample.com")
-                leaf = LeafNode(text_type_to_tag[key], "Link", { "href": node.url })
+                leaf = LeafNode(text_type_to_tag[key], "Link", {"href": node.url})
             elif key == "image":
                 node = TextNode("Image", key, "https://www.source.com")
-                leaf = LeafNode(text_type_to_tag[key], "", { "src": node.url, "alt": node.text })
+                leaf = LeafNode(
+                    text_type_to_tag[key], "", {"src": node.url, "alt": node.text}
+                )
             else:
                 node = TextNode("Texty Node", key)
                 leaf = LeafNode(text_type_to_tag[key], node.text)
@@ -50,6 +55,7 @@ class TestTextNode(unittest.TestCase):
             node.text_node_to_html_node()
             ve_error = ve.exception
             self.assertEqual(ve_error.error_code, "Invalid text type: table")
+
 
 if __name__ == "__main__":
     unittest.main()

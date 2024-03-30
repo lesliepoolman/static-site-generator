@@ -3,6 +3,7 @@ from leafnode import LeafNode
 from parentnode import ParentNode
 from htmlnode import HTMLNode
 
+
 def main():
     node = ParentNode(
         [
@@ -15,5 +16,6 @@ def main():
     )
 
     print(node.to_html())
+
 
 main()
