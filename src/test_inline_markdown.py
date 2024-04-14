@@ -5,6 +5,8 @@ from inline_markdown import (
     split_nodes_delimiter,
     extract_markdown_images,
     extract_markdown_links,
+    split_nodes_image,
+    split_nodes_link,
 )
 
 
@@ -81,13 +83,115 @@ class TestInlineMarkdown(unittest.TestCase):
         ]
         self.assertEqual(exp_res, example)
 
-    def test_extract_images_using_regex(self):
+    def test_extract_links_using_regex(self):
         example = extract_markdown_links(
             "This is text with a [link](https://www.example.com) and [another](https://www.example.com/another)"
         )
         exp_res = [
             ("link", "https://www.example.com"),
             ("another", "https://www.example.com/another"),
+        ]
+        self.assertEqual(exp_res, example)
+
+    def test_split_nodes_image_with_images(self):
+        example = split_nodes_image(
+            [
+                TextNode(
+                    "This is text with an ![image](https://storage.googleapis.com/qvault-webapp-dynamic-assets/course_assets/zjjcJKZ.png) and another ![second image](https://storage.googleapis.com/qvault-webapp-dynamic-assets/course_assets/3elNhQu.png)",
+                    "text",
+                )
+            ]
+        )
+        exp_res = [
+            TextNode("This is text with an ", "text"),
+            TextNode(
+                "image",
+                "image",
+                "https://storage.googleapis.com/qvault-webapp-dynamic-assets/course_assets/zjjcJKZ.png",
+            ),
+            TextNode(" and another ", "text"),
+            TextNode(
+                "second image",
+                "image",
+                "https://storage.googleapis.com/qvault-webapp-dynamic-assets/course_assets/3elNhQu.png",
+            ),
+        ]
+        self.assertEqual(exp_res, example)
+
+    def test_split_nodes_image_with_images2(self):
+        example = split_nodes_image(
+            [
+                TextNode(
+                    "![image](https://storage.googleapis.com/qvault-webapp-dynamic-assets/course_assets/zjjcJKZ.png) and this is for confusion",
+                    "text",
+                )
+            ]
+        )
+        exp_res = [
+            TextNode(
+                "image",
+                "image",
+                "https://storage.googleapis.com/qvault-webapp-dynamic-assets/course_assets/zjjcJKZ.png",
+            ),
+            TextNode(" and this is for confusion", "text"),
+        ]
+        self.assertEqual(exp_res, example)
+
+    def test_split_nodes_image_without_images(self):
+        example = split_nodes_image([TextNode("This is text without images", "text")])
+        exp_res = [
+            TextNode("This is text without images", "text"),
+        ]
+        self.assertEqual(exp_res, example)
+
+    def test_split_nodes_link_with_links(self):
+        example = split_nodes_link(
+            [
+                TextNode(
+                    "This is text with an [link](https://storage.googleapis.com/qvault-webapp-dynamic-assets/course_assets/zjjcJKZ.png) and another [second link](https://storage.googleapis.com/qvault-webapp-dynamic-assets/course_assets/3elNhQu.png)",
+                    "text",
+                )
+            ]
+        )
+        exp_res = [
+            TextNode("This is text with an ", "text"),
+            TextNode(
+                "link",
+                "link",
+                "https://storage.googleapis.com/qvault-webapp-dynamic-assets/course_assets/zjjcJKZ.png",
+            ),
+            TextNode(" and another ", "text"),
+            TextNode(
+                "second link",
+                "link",
+                "https://storage.googleapis.com/qvault-webapp-dynamic-assets/course_assets/3elNhQu.png",
+            ),
+        ]
+        self.assertEqual(exp_res, example)
+
+    def test_split_nodes_link_with_links2(self):
+        example = split_nodes_link(
+            [
+                TextNode(
+                    "[link](https://storage.googleapis.com/qvault-webapp-dynamic-assets/course_assets/zjjcJKZ.png) and over here too.",
+                    "text",
+                )
+            ]
+        )
+        exp_res = [
+            TextNode(
+                "link",
+                "link",
+                "https://storage.googleapis.com/qvault-webapp-dynamic-assets/course_assets/zjjcJKZ.png",
+            ),
+            TextNode(" and over here too.", "text"),
+        ]
+        self.assertEqual(exp_res, example)
+
+    def test_split_nodes_link_without_links(self):
+        example = split_nodes_link([TextNode("This is text without links", "text")])
+        exp_res = [
+            TextNode("This is text without links", "text"),
         ]
         self.assertEqual(exp_res, example)
 
