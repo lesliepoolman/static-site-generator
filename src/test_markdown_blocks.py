@@ -50,57 +50,33 @@ This is **bolded** paragraph
         ]
         self.assertEqual(exp_res, example)
 
-    def test_block_to_block_type_heading(self):
-        example = block_to_block_type("# This is a heading")
-        self.assertEqual(block_type_heading, example)
+    def test_block_to_block_types_happy_path(self):
+        block = "# heading"
+        self.assertEqual(block_to_block_type(block), block_type_heading)
+        block = "```\ncode\n```"
+        self.assertEqual(block_to_block_type(block), block_type_code)
+        block = "> quote\n> more quote"
+        self.assertEqual(block_to_block_type(block), block_type_quote)
+        block = "* list\n* items"
+        self.assertEqual(block_to_block_type(block), block_type_unordered_list)
+        block = "1. list\n2. items"
+        self.assertEqual(block_to_block_type(block), block_type_ordered_list)
+        block = "paragraph"
+        self.assertEqual(block_to_block_type(block), block_type_paragraph)
 
-    def test_block_to_block_type_heading2(self):
-        example = block_to_block_type("## This is a heading")
-        self.assertEqual(block_type_heading, example)
-
-    def test_block_to_block_type_heading3(self):
-        example = block_to_block_type("### This is a heading")
-        self.assertEqual(block_type_heading, example)
-
-    def test_block_to_block_type_heading4(self):
-        example = block_to_block_type("#### This is a heading")
-        self.assertEqual(block_type_heading, example)
-
-    def test_block_to_block_type_heading5(self):
-        example = block_to_block_type("##### This is a heading")
-        self.assertEqual(block_type_heading, example)
-
-    def test_block_to_block_type_heading6(self):
-        example = block_to_block_type("###### This is a heading")
-        self.assertEqual(block_type_heading, example)
-
-    def test_block_to_block_type_code(self):
-        example = block_to_block_type("``` This is a code block")
-        self.assertEqual(block_type_code, example)
-
-    def test_block_to_block_type_quote(self):
-        example = block_to_block_type("> This is a quote block")
-        self.assertEqual(block_type_quote, example)
-
-    def test_block_to_block_type_unordered_list(self):
-        example = block_to_block_type("* This is an unordered list item")
-        self.assertEqual(block_type_unordered_list, example)
-
-    def test_block_to_block_type_unordered_list2(self):
-        example = block_to_block_type("- This is an unordered list item")
-        self.assertEqual(block_type_unordered_list, example)
-
-    def test_block_to_block_type_ordered_list(self):
-        example = block_to_block_type("1. This is an ordered list item")
-        self.assertEqual(block_type_ordered_list, example)
-
-    def test_block_to_block_type_ordered_list2(self):
-        example = block_to_block_type("10. This is an ordered list item")
-        self.assertEqual(block_type_ordered_list, example)
-
-    def test_block_to_block_type_paragraph(self):
-        example = block_to_block_type("This is a paragraph.")
-        self.assertEqual(block_type_paragraph, example)
+    def test_block_to_block_types_sad_path(self):
+        block = "#heading"
+        self.assertEqual(block_to_block_type(block), block_type_paragraph)
+        block = "```\n code"
+        self.assertEqual(block_to_block_type(block), block_type_paragraph)
+        block = "> quote\n more quote"
+        self.assertEqual(block_to_block_type(block), block_type_paragraph)
+        block = "* list\n list"
+        self.assertEqual(block_to_block_type(block), block_type_paragraph)
+        block = "- list\n list"
+        self.assertEqual(block_to_block_type(block), block_type_paragraph)
+        block = "1. list\n  items"
+        self.assertEqual(block_to_block_type(block), block_type_paragraph)
 
 
 if __name__ == "__main__":
